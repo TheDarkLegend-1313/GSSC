@@ -19,7 +19,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('authentication/', include('django.contrib.auth.urls')),
+    path('auth/', include('django.contrib.auth.urls')),
+    path('auth/', include('apps.AUTHENTICATION.urls')),
     path('', include('apps.DASHBOARD.urls')),
     path('calculator/', include('apps.CALCULATOR.urls')),
     path('price-tracker/', include('apps.PRICE_TRACKER.urls')),

@@ -219,12 +219,11 @@ body {
   <!-- Sidebar -->
   <div class="sidebar">
     <h2>☀ GSSC</h2>
-    <a href="{% url 'home' %}" class="sidebar-btn">Dashboard</a>
-    <a href="{% url 'process_click' %}" class="sidebar-btn">Solar Calculator</a>
-    <a href="{% url 'process_click' %}" class="sidebar-btn">Panel → Appliance</a>
-    <a href="{% url 'process_click' %}" class="sidebar-btn">Price Tracker</a>
-    <a href="{% url 'process_click' %}" class="sidebar-btn">Quotations</a>
-    <a href="{% url 'process_click' %}" class="sidebar-btn">AI Chatbot</a >
+    <a href="{% url 'dashboard_url' %}" class="sidebar-btn">Dashboard</a>
+    <a href="{% url 'calculator_url' %}" class="sidebar-btn">Solar Calculator</a>
+    <a href="{% url 'price_tracker_url' %}" class="sidebar-btn">Price Tracker</a>
+    <a href="{% url 'quotation_generator_url' %}" class="sidebar-btn">Quotations</a>
+    <a href="{% url 'ai_chatbot_url' %}" class="sidebar-btn">AI Chatbot</a>
     <button class="logout-btn">Logout</button>
   </div>
 

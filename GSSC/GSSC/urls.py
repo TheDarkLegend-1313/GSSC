@@ -19,6 +19,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('django.contrib.auth.urls')),
-    path('dashboard/', include('apps.DASHBOARD.urls')),
+    path('authentication/', include('django.contrib.auth.urls')),
+    path('', include('apps.DASHBOARD.urls')),
+    path('calculator/', include('apps.CALCULATOR.urls')),
+    path('price-tracker/', include('apps.PRICE_TRACKER.urls')),
+    path('quotation-generator/', include('apps.QUOTATION_GENERATOR.urls')),
+    path('ai-chatbot/', include('apps.AI_CHATBOT.urls')),
 ]

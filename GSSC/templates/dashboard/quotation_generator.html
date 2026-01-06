@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Quotation Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  font-family:Segoe UI;
+  background:#eef2ff;
+  padding:40px
+}
+.card{
+  max-width:700px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:25px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15)
+}
+select,input,button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border-radius:20px;
+  border:1px solid #ddd
+}
+button{
+  background:#6366f1;
+  color:white;
+  font-size:16px;
+  border:none;
+  cursor:pointer
+}
+.breakdown{
+  margin-top:25px;
+  background:#f8fafc;
+  padding:20px;
+  border-radius:20px
+}
+.breakdown p{margin:6px 0}
+.total{font-size:20px;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>📄 Solar Quotation Generator</h2>
+
+<input id="panels" type="number" placeholder="Number of Panels">
+
+<select id="panelBrand">
+  <option value="45000">Longi – Rs 45,000</option>
+  <option value="48000">JA Solar – Rs 48,000</option>
+</select>
+
+<select id="inverter">
+  <option value="180000">5kW Hybrid – Rs 180,000</option>
+  <option value="240000">8kW Hybrid – Rs 240,000</option>
+</select>
+
+<select id="battery">
+  <option value="200000">5kWh Battery – Rs 200,000</option>
+  <option value="380000">10kWh Battery – Rs 380,000</option>
+</select>
+
+<button onclick="generate()">Generate Quotation</button>
+
+<div class="breakdown" id="quote" style="display:none"></div>
+</div>
+
+<script>
+function generate(){
+
+  const p=+panels.value||0;
+  const panelPrice=+panelBrand.value;
+  const inverterPrice=+inverter.value;
+  const batteryPrice=+battery.value;
+
+  const panelsCost=p*panelPrice;
+  const install=Math.round(panelsCost*0.08);
+  const maintenance=25000;
+
+  const total=panelsCost+inverterPrice+batteryPrice+install+maintenance;
+
+  quote.style.display="block";
+  quote.innerHTML=`
+  <p>Panels Cost: Rs ${panelsCost.toLocaleString()}</p>
+  <p>Inverter: Rs ${inverterPrice.toLocaleString()}</p>
+  <p>Battery: Rs ${batteryPrice.toLocaleString()}</p>
+  <p>Installation: Rs ${install.toLocaleString()}</p>
+  <p>Maintenance: Rs ${maintenance.toLocaleString()}</p>
+  <hr>
+  <p class="total">Total System Cost: Rs ${total.toLocaleString()}</p>
+  `;
+}
+</script>
+
+</body>
+</html>

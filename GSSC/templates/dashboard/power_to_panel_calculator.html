@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Solar Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  font-family:Segoe UI;
+  background:linear-gradient(135deg,#ecfeff,#fef9c3);
+  padding:40px
+}
+.card{
+  max-width:800px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:25px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15)
+}
+h2{margin-bottom:10px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px
+}
+input,select,button{
+  width:100%;
+  padding:14px;
+  border-radius:20px;
+  border:1px solid #ddd;
+  margin-top:8px
+}
+button{
+  background:#22c55e;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  border:none
+}
+.result{
+  margin-top:25px;
+  background:#f8fafc;
+  padding:20px;
+  border-radius:20px
+}
+.result p{margin:6px 0}
+.highlight{font-weight:bold;color:#0f766e}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>☀ Solar Energy Calculator</h2>
+<p>Estimate system size, cost, savings, and ROI based on your usage</p>
+
+<div class="grid">
+  <input id="lights" type="number" placeholder="Lights (qty)">
+  <input id="fans" type="number" placeholder="Fans (qty)">
+  <input id="tv" type="number" placeholder="TVs (qty)">
+  <input id="ac" type="number" placeholder="ACs (qty)">
+  <input id="hours" type="number" placeholder="Avg Usage Hours / Day">
+  <select id="panelWatt">
+    <option value="550">550W Panel</option>
+    <option value="600">600W Panel</option>
+  </select>
+</div>
+
+<button onclick="calculate()">Calculate Solar System</button>
+
+<div class="result" id="output" style="display:none"></div>
+</div>
+
+<script>
+function calculate(){
+
+  const lights=lightsInput=+lights.value||0;
+  const fans=+fans.value||0;
+  const tv=+tv.value||0;
+  const ac=+ac.value||0;
+  const hrs=+hours.value||0;
+  const panelW=+panelWatt.value;
+
+  // Appliance wattage assumptions
+  const load =
+    lights*20 +
+    fans*80 +
+    tv*150 +
+    ac*1500;
+
+  const dailyWh = load * hrs;
+  const monthlyUnits = (dailyWh*30)/1000;
+
+  const panels = Math.ceil((load*1.25)/panelW);
+  const inverterKW = Math.ceil(load/1000);
+  const batteryKWh = Math.ceil(dailyWh/1000 * 0.5);
+
+  // Cost assumptions (PKR)
+  const panelCost = panels * 45000;
+  const inverterCost = inverterKW * 65000;
+  const batteryCost = batteryKWh * 50000;
+  const totalCost = panelCost + inverterCost + batteryCost;
+
+  const monthlyBill = monthlyUnits * 60;
+  const yearlySaving = monthlyBill * 12;
+  const payback = (totalCost / yearlySaving).toFixed(1);
+
+  output.style.display="block";
+  output.innerHTML=`
+  <p><span class="highlight">Total Load:</span> ${load} W</p>
+  <p><span class="highlight">Daily Energy:</span> ${(dailyWh/1000).toFixed(2)} kWh</p>
+  <p><span class="highlight">Monthly Units:</span> ${monthlyUnits.toFixed(1)} kWh</p>
+  <hr>
+  <p><span class="highlight">Recommended Panels:</span> ${panels} × ${panelW}W</p>
+  <p><span class="highlight">Inverter:</span> ${inverterKW} kW</p>
+  <p><span class="highlight">Battery:</span> ${batteryKWh} kWh</p>
+  <hr>
+  <p><span class="highlight">Estimated Cost:</span> Rs ${totalCost.toLocaleString()}</p>
+  <p><span class="highlight">Yearly Savings:</span> Rs ${yearlySaving.toLocaleString()}</p>
+  <p><span class="highlight">Payback Period:</span> ${payback} years</p>
+  `;
+}
+</script>
+
+</body>
+</html>

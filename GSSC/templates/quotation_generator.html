@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Quotation Generator | GSSC{% endblock %}
+{% block header_title %}Solar Quotation Generator{% endblock %}
+
+{% block extra_css %}
+<style>
+.quote-card{
+  max-width:720px;
+  background:linear-gradient(180deg,#020617,#020617cc);
+  padding:30px;
+  border-radius:28px;
+  box-shadow:0 30px 70px rgba(0,0,0,.65);
+}
+
+.form-control, .form-select{
+  background:#020617;
+  border:1px solid rgba(255,255,255,.12);
+  color:#e5e7eb;
+  border-radius:18px;
+  padding:14px;
+}
+
+.form-control:focus,
+.form-select:focus{
+  border-color:#22c55e;
+  box-shadow:0 0 0 3px rgba(34,197,94,.25);
+}
+
+.btn-generate{
+  background:linear-gradient(135deg,#22c55e,#4ade80);
+  border:none;
+  color:#022c22;
+  font-weight:600;
+  padding:14px;
+  border-radius:999px;
+  transition:.25s;
+}
+
+.btn-generate:hover{
+  transform:scale(1.04);
+}
+
+/* Breakdown */
+.breakdown{
+  margin-top:25px;
+  background:rgba(255,255,255,.04);
+  padding:22px;
+  border-radius:22px;
+}
+
+.breakdown p{
+  margin:8px 0;
+  font-size:15px;
+}
+
+.total{
+  font-size:20px;
+  font-weight:600;
+  color:#22c55e;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center">
+  <div class="quote-card w-100">
+
+    <p class="text-secondary mb-4">
+      Generate a detailed cost estimation for a complete solar system setup.
+    </p>
+
+    <div class="mb-3">
+      <input id="panels" type="number" class="form-control"
+             placeholder="Number of Solar Panels">
+    </div>
+
+    <div class="mb-3">
+      <select id="panelBrand" class="form-select">
+        <option value="45000">Longi – Rs 45,000 per panel</option>
+        <option value="48000">JA Solar – Rs 48,000 per panel</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <select id="inverter" class="form-select">
+        <option value="180000">5kW Hybrid Inverter – Rs 180,000</option>
+        <option value="240000">8kW Hybrid Inverter – Rs 240,000</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <select id="battery" class="form-select">
+        <option value="200000">5 kWh Battery – Rs 200,000</option>
+        <option value="380000">10 kWh Battery – Rs 380,000</option>
+      </select>
+    </div>
+
+    <button class="btn-generate w-100" onclick="generateQuotation()">
+      Generate Quotation
+    </button>
+
+    <div class="breakdown" id="quote" style="display:none"></div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function generateQuotation(){
+
+  const p = +document.getElementById("panels").value || 0;
+  const panelPrice = +document.getElementById("panelBrand").value;
+  const inverterPrice = +document.getElementById("inverter").value;
+  const batteryPrice = +document.getElementById("battery").value;
+
+  const panelsCost = p * panelPrice;
+  const installation = Math.round(panelsCost * 0.08);
+  const maintenance = 25000;
+
+  const total = panelsCost + inverterPrice + batteryPrice + installation + maintenance;
+
+  const quote = document.getElementById("quote");
+  quote.style.display = "block";
+
+  quote.innerHTML = `
+    <p>Solar Panels Cost: Rs ${panelsCost.toLocaleString()}</p>
+    <p>Inverter Cost: Rs ${inverterPrice.toLocaleString()}</p>
+    <p>Battery Cost: Rs ${batteryPrice.toLocaleString()}</p>
+    <p>Installation Charges: Rs ${installation.toLocaleString()}</p>
+    <p>Maintenance Cost: Rs ${maintenance.toLocaleString()}</p>
+    <hr>
+    <p class="total">Total System Cost: Rs ${total.toLocaleString()}</p>
+  `;
+}
+</script>
+{% endblock %}

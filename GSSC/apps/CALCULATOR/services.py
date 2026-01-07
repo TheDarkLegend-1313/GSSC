@@ -10,6 +10,16 @@ What my Input Dictionary should look like:
     'fridge': {'power_watts': 800, 'quantity': 1, 'hours_per_day': 24},
 }
 
+Hourly Power = 6000 Wh = 6 kWh
+Adjusted Hourly Power = 7800 Wh = 7.8 kWh
+Solar Panels(650) = 12
+
+Backup Hours = 6 
+Total Backup Energy = 46.8 kWh
+Backup Solar Panels(650) = 46.8/(0.65*8) = 9
+
+We multiply the power of panel by 8 for backup because we assume that the solar panels will generate power for 8 hours a day.
+
 What my Output Dictionary should look like:
 {
     'system_requirements':{
@@ -42,6 +52,10 @@ def max_inverter_capacity_kw(
 ) -> float:
     return round(total_hourly_wh / 1000, 2)
 
+#=============================================================
+# CALCULATW MORNING LOAD REQUIREMENTS
+#=============================================================
+
 def power_to_panel_morning_load(
     panel_watt: int = 550,
     total_hourly_wh: float = 0.0,
@@ -67,36 +81,34 @@ def power_to_panel_morning_load(
 
 
 #=============================================================
-# STILL IN PROGRESS - NEEDS TESTING AND VERIFICATION
+# CALCULATW NIGHT LOAD REQUIREMENTS
 #=============================================================
 def power_to_panel_night_load(
     panel_watt: int = 550,
     total_hourly_wh: float = 0.0,
     backup_hours: int = 4,
 ) -> dict:
-    
-    total_night_kwh = 0.0
     system_loss_factor: float = 1.30
 
     # Solar panels required
     adjusted_hourly_wh = total_hourly_wh * system_loss_factor
-    solar_panel_quantity = math.ceil(adjusted_hourly_wh / panel_watt)
+    total_night_wh = adjusted_hourly_wh * backup_hours
+    solar_panel_quantity = math.ceil(total_night_wh / (panel_watt * 8))
 
     return {
         "system_requirements": {
-            "total_night_kwh": round(total_night_kwh, 2),
+            "total_night_kwh": round(total_night_wh / 1000, 2),
             "night_solar_panel_quantity": solar_panel_quantity,
         }
     }
 
 #=============================================================
-# STILL IN PROGRESS - NEEDS TESTING AND VERIFICATION
+# CALCULATE TOTAL LOAD REQUIREMENTS
 #=============================================================
 def power_to_panel_full_day_load(
     appliances: dict,
     panel_watt: int = 550,
-    total_hourly_wh: float = 0.0,
-    backup_hours: int = 4,
+    backup_hours: int = 0,
 ) -> dict:
     
     total_hourly_wh = hourly_power_consumption(appliances)
@@ -123,31 +135,50 @@ def power_to_panel_full_day_load(
         night_load["system_requirements"]["total_night_kwh"],
     )
 
-    system_loss_factor: float = 1.30
-    sun_hours_per_day: int = 8
-
-    # Solar panels required
-
-    # Daily energy requirement (kWh)
-    total_daily_kwh = round((total_hourly_wh * 24) / 1000, 2)
-
     return {
         "system_requirements": {
+            "max_inverter_capacity_kw": inverter_capacity_kw,
             "total_daily_kwh": round(total_daily_kwh, 2),
             "solar_panel_quantity": solar_panel_quantity,
         }
     }
 
 
+'''
+Let say we have 20 panels of 550W each.
+We can calculate the total power generated in a day as follows:
+20 x 550W x 8 hours / 1.3 (system loss factor) = 67,700 kWh 
+
+Hourly Panel power = 20 x 550 / 1.3 = 8,462 Wh
+
+let say x are the number of panels we need during the day.
+and y are the number of panels we need for backup.
+If we have z number of total panels and b hours of backup, and pw panel watt
+then:
+
+Wh = pw x z = x + y
+
+y = z x pw x 8 x 1.3 / b
+
+let y = 20 x 550 x 8 x 1.3 / 6 = 19066.66 Wh = 19.06 kWh
+'''
+
 def panel_to_power_calculation(
     solar_panel_quantity: int,
-    panel_watt: int = 550,
-    sun_hours_per_day: int = 8,
+    panel_watt: int = 550,   
+    backup_hours: int = 0, 
 ) -> dict:
     
-    total_daily_kwh = round(
-        (solar_panel_quantity * panel_watt * sun_hours_per_day) / 1000, 2
-    )
+    sun_hours_per_day: int = 8
+    system_loss_factor: float = 1.30
+
+    if backup_hours > 0:
+        # No Night Backup Calculation needed!
+        total_hourly_wh = solar_panel_quantity * panel_watt * system_loss_factor
+    else:
+
+
+        total_daily_kwh = round((solar_panel_quantity * panel_watt * sun_hours_per_day * system_loss_factor) / 1000, 2)
 
     inverter_capacity_kw = round((solar_panel_quantity * panel_watt) / 1000, 2)
 

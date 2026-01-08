@@ -147,21 +147,49 @@ def power_to_panel_full_day_load(
 '''
 Let say we have 20 panels of 550W each.
 We can calculate the total power generated in a day as follows:
-20 x 550W x 8 hours / 1.3 (system loss factor) = 67,700 kWh 
+20 x 550W x 8 hours x 0.7 (system loss factor) = 61,600 Wh = 61.6 kWh
 
-Hourly Panel power = 20 x 550 / 1.3 = 8,462 Wh
 
-let say x are the number of panels we need during the day.
-and y are the number of panels we need for backup.
+
+let say x is the power we need during the day.
+and y is the power we need for backup.
 If we have z number of total panels and b hours of backup, and pw panel watt
 then:
 
-Wh = pw x z = x + y
+Power per day = z x pw x 8 x 0.7 = Total Daily kWh
+Power per hour = z x pw x 0.7 = Wh
 
-y = z x pw x 8 x 1.3 / b
+ppd = 20 x 550 x 8 x 0.7 = 61,600 Wh = 61.6 kWh
+pph = 20 x 550 x 0.7 = 7,700 Wh
 
-let y = 20 x 550 x 8 x 1.3 / 6 = 19066.66 Wh = 19.06 kWh
+x + y = pph
+8x + by = pph x 8
+
+From the above two equations we can solve for x and y. Let b = 4
+x + y = 7,700
+8x + by = 61,600
+
+Solving for x and y we get:
+x = 8,462 - y
+8(8,462 - y) + 4y = 61,600
+67,696 - 8y + 4y = 61,600
+-4y = -6,096
+
+y = 1.52 kWh (Backup Power)
+x = 8,462 - 1,520 = 6,942 Wh (Daytime Power)
+
+what if,
+ppd/b + 8
+
+What if we want to calculate the power generated per day divided by backup hours plus 8?
+61.6 / 4 + 8 = 15.4 kWh 
+
 '''
+
+
+#=============================================================
+# CALCULATE TOTAL POWER FROM GIVEN NUMBER OF PANELS
+#=============================================================
 
 def panel_to_power_calculation(
     solar_panel_quantity: int,
@@ -170,22 +198,21 @@ def panel_to_power_calculation(
 ) -> dict:
     
     sun_hours_per_day: int = 8
-    system_loss_factor: float = 1.30
+    system_loss_factor: float = 0.70
 
-    if backup_hours > 0:
-        # No Night Backup Calculation needed!
-        total_hourly_wh = solar_panel_quantity * panel_watt * system_loss_factor
-    else:
+    total_hourly_wh = solar_panel_quantity * panel_watt * system_loss_factor
+    
+    usable_power_per_hour_wh = total_hourly_wh / (backup_hours + sun_hours_per_day)
 
-
-        total_daily_kwh = round((solar_panel_quantity * panel_watt * sun_hours_per_day * system_loss_factor) / 1000, 2)
+    total_daily_kwh = round((total_hourly_wh * sun_hours_per_day) / 1000, 2)
 
     inverter_capacity_kw = round((solar_panel_quantity * panel_watt) / 1000, 2)
 
-    battery_capacity_kwh = round(total_daily_kwh * 0.4, 2)
+    battery_capacity_kwh = round(total_hourly_wh * backup_hours / 1000, 2)
 
     return {
         "system_requirements": {
+            "usable_power_per_hour_kwh": round(usable_power_per_hour_wh / 1000, 2),
             "total_daily_kwh": total_daily_kwh,
             "inverter_capacity_kw": inverter_capacity_kw,
             "battery_capacity_kwh": battery_capacity_kwh,

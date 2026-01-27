@@ -15,7 +15,7 @@ const QUOTATION_ITEMS = [
   'AC Cable',
   'Installation Accessories',
   'AC/DC Earthing Bore',
-  'Net Metering Green Meter',
+  'Net Metering Green Meter', 
 ]
 
 const QuotationGeneratorPage = () => {
@@ -480,7 +480,7 @@ const QuotationGeneratorPage = () => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <strong>Estimated Total Price:</strong>
-                  <span>₹{calculationResults.estimatedTotalPrice.toFixed(2)}</span>
+                  <span>Rs. {calculationResults.estimatedTotalPrice.toFixed(2)}</span>
                 </div>
               </div>
             )}

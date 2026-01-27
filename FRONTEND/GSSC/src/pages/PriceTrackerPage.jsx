@@ -6,7 +6,7 @@ import { FiRefreshCw, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 const FILTERS = [
   { value: 'solar_panel', label: 'Solar Panel' },
   { value: 'inverter', label: 'Inverter' },
-  { value: 'batteries', label: 'Batteries' },
+  { value: 'battery', label: 'Battery' },
 ]
 
 const ITEMS_PER_PAGE = 10

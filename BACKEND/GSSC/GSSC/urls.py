@@ -16,14 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from APPS.PRICE_TRACKER import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('apps.AUTHENTICATION.urls')),
-    path('', include('apps.DASHBOARD.urls')),
-    path('calculator/', include('apps.CALCULATOR.urls')),
-    path('price-tracker/', include('apps.PRICE_TRACKER.urls')),
-    path('quotation-generator/', include('apps.QUOTATION_GENERATOR.urls')),
-    path('ai-chatbot/', include('apps.AI_CHATBOT.urls')),
-    path('contacts/', include('apps.CONTACTS.urls')),
+    path('auth/', include('APPS.AUTHENTICATION.urls')),
+    path('ai-chatbot/', include('APPS.AI_CHATBOT.urls')),
+    path('calculator/', include('APPS.CALCULATOR.urls')),
+    path('contacts/', include('APPS.CONTACTS.urls')),
+    path('price-tracker/', views.PriceTrackerListView.as_view(), name="price_tracker"),
+    path('quotation/', include('APPS.QUOTATION_GENERATOR.urls')),
 ]

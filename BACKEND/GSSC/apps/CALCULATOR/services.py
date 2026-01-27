@@ -105,7 +105,7 @@ def power_to_panel_night_load(
 #=============================================================
 # CALCULATE TOTAL LOAD REQUIREMENTS
 #=============================================================
-def power_to_panel_full_day_load(
+def power_to_panel_calculator(
     appliances: dict,
     panel_watt: int = 550,
     backup_hours: int = 0,
@@ -138,7 +138,7 @@ def power_to_panel_full_day_load(
     return {
         "system_requirements": {
             "max_inverter_capacity_kw": inverter_capacity_kw,
-            "total_daily_kwh": round(total_daily_kwh, 2),
+            "total_daily_power_kwh": round(total_daily_kwh, 2),
             "solar_panel_quantity": solar_panel_quantity,
         }
     }
@@ -191,7 +191,7 @@ What if we want to calculate the power generated per day divided by backup hours
 # CALCULATE TOTAL POWER FROM GIVEN NUMBER OF PANELS
 #=============================================================
 
-def panel_to_power_calculation(
+def panel_to_power_calculator(
     solar_panel_quantity: int,
     panel_watt: int = 550,   
     backup_hours: int = 0, 
@@ -212,8 +212,8 @@ def panel_to_power_calculation(
 
     return {
         "system_requirements": {
-            "usable_power_per_hour_kwh": round(usable_power_per_hour_wh / 1000, 2),
-            "total_daily_kwh": total_daily_kwh,
+            "usable_power_kwh": round(usable_power_per_hour_wh / 1000, 2),
+            "total_daily_power_kwh": total_daily_kwh,
             "inverter_capacity_kw": inverter_capacity_kw,
             "battery_capacity_kwh": battery_capacity_kwh,
         }

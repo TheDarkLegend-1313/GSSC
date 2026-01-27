@@ -1,12 +1,12 @@
 const ACCESS_KEY = 'access_token'
 const REFRESH_KEY = 'refresh_token'
-const EMAIL_KEY = 'user_email'
+const USERNAME_KEY = 'username'
 
 export const tokenService = {
-  setTokens(access, refresh, email) {
+  setTokens(access, refresh, username) {
     localStorage.setItem(ACCESS_KEY, access)
     localStorage.setItem(REFRESH_KEY, refresh)
-    localStorage.setItem(EMAIL_KEY, email)
+    localStorage.setItem(USERNAME_KEY, username)
   },
 
   getAccessToken() {
@@ -17,8 +17,8 @@ export const tokenService = {
     return localStorage.getItem(REFRESH_KEY)
   },
 
-  getUserEmail() {
-    return localStorage.getItem(EMAIL_KEY)
+  getUsername() {
+    return localStorage.getItem(USERNAME_KEY)
   },
 
   hasTokens() {
@@ -28,6 +28,6 @@ export const tokenService = {
   clearTokens() {
     localStorage.removeItem(ACCESS_KEY)
     localStorage.removeItem(REFRESH_KEY)
-    localStorage.removeItem(EMAIL_KEY)
+    localStorage.removeItem(USERNAME_KEY)
   }
 }

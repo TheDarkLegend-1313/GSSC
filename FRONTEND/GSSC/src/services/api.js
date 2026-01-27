@@ -14,30 +14,30 @@ const api = axios.create({
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'access_token'
 const REFRESH_TOKEN_KEY = 'refresh_token'
-const EMAIL_KEY = 'user_email'
+const USERNAME_KEY = 'user_username'
 
 // Token management functions
 export const tokenService = {
   getAccessToken: () => localStorage.getItem(ACCESS_TOKEN_KEY),
   getRefreshToken: () => localStorage.getItem(REFRESH_TOKEN_KEY),
-  getUserEmail: () => localStorage.getItem(EMAIL_KEY),
-  setTokens: (accessToken, refreshToken, email) => {
+  getUsername: () => localStorage.getItem(USERNAME_KEY),
+  setTokens: (accessToken, refreshToken, username) => {
     localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
     if (refreshToken) {
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
     }
-    if (email) {
-      localStorage.setItem(EMAIL_KEY, email)
+    if (username) {
+      localStorage.setItem(USERNAME_KEY, username)
     }
   },
   clearTokens: () => {
     localStorage.removeItem(ACCESS_TOKEN_KEY)
     localStorage.removeItem(REFRESH_TOKEN_KEY)
-    localStorage.removeItem(EMAIL_KEY)
+    localStorage.removeItem(USERNAME_KEY)
   },
   hasTokens: () => {
     return !!(
-      localStorage.getItem(ACCESS_TOKEN_KEY) && localStorage.getItem(REFRESH_TOKEN_KEY)
+      localStorage.getItem(ACCESS_TOKEN_KEY) && localStorage.getItem(REFRESH_TOKEN_KEY) && localStorage.getItem(USERNAME_KEY)
     )
   },
 }
@@ -97,8 +97,8 @@ api.interceptors.response.use(
 
 // Auth API endpoints
 export const authAPI = {
-  login: async (email, password) => {
-    const response = await api.post('/auth/login/', { email, password })
+  login: async (username, password) => {
+    const response = await api.post('/auth/login/', { username, password })
     // Return the full response data - let AuthContext handle token extraction
     return response.data
   },
@@ -169,7 +169,7 @@ export const authAPI = {
 // Calculator API endpoints
 export const calculatorAPI = {
   calculateSolar: async (data) => {
-    const response = await api.post('/calculator/solar/', data)
+    const response = await api.post('/calculator/panel/', data)
     return response.data
   },
 

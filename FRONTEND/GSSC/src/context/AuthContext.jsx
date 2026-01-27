@@ -10,18 +10,18 @@ export const AuthProvider = ({ children }) => {
   // Restore auth state on page refresh
   useEffect(() => {
     if (tokenService.hasTokens()) {
-      const email = tokenService.getUserEmail()
-      if (email) {
-        setUser({ email })
+      const username = tokenService.getUsername()
+      if (username) {
+        setUser({ username })
       }
     }
     setLoading(false)
   }, [])
 
   // LOGIN
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     try {
-      const response = await authAPI.login(email, password)
+      const response = await authAPI.login(username, password)
 
       /*
         Expected response structure (can vary):
@@ -35,14 +35,14 @@ export const AuthProvider = ({ children }) => {
       // Handle different response structures
       const accessToken = response.access_token || response.access || response.data?.access_token
       const refreshToken = response.refresh_token || response.refresh || response.data?.refresh_token
-      const userEmail = response.email || response.user?.email || email
+      const userName = response.username || response.user?.username || username
 
       if (!accessToken) {
         throw new Error('No access token received from server')
       }
 
-      tokenService.setTokens(accessToken, refreshToken || '', userEmail)
-      setUser({ email: userEmail })
+      tokenService.setTokens(accessToken, refreshToken || '', userName)
+      setUser({ username : userName })
 
       return { success: true }
     } catch (error) {

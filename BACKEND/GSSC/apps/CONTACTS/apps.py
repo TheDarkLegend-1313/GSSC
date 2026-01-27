@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class ContactsConfig(AppConfig):
-    name = 'apps.CONTACTS'
+    name = 'APPS.CONTACTS'

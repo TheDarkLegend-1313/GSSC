@@ -17,7 +17,7 @@ const PANEL_WATTS = [550, 650, 750]
 const SolarCalculatorPage = () => {
   const [appliances, setAppliances] = useState(
     APPLIANCES.reduce((acc, app) => {
-      acc[app.key] = { enabled: false, power: 0 }
+      acc[app.key] = { enabled: false, power: 0, quantity: 1 }
       return acc
     }, {})
   )
@@ -44,7 +44,7 @@ const SolarCalculatorPage = () => {
       ...prev,
       [key]: {
         ...prev[key],
-        [field]: field === 'enabled' ? value : Number(value) || 0,
+        [field]: field === 'enabled' ? value : Number(value) || 1,
       },
     }))
   }
@@ -57,7 +57,10 @@ const SolarCalculatorPage = () => {
     // Build appliances JSON
     const appliancesJson = Object.keys(appliances).reduce((acc, key) => {
       if (appliances[key].enabled) {
-        acc[key] = appliances[key].power
+        acc[key] = {
+          power: appliances[key].power,
+          quantity: appliances[key].quantity,
+        }
       }
       return acc
     }, {})
@@ -141,18 +144,32 @@ const SolarCalculatorPage = () => {
                         <span>{app.label}</span>
                       </label>
                       {appliances[app.key].enabled && (
-                        <input
-                          type="number"
-                          min="0"
-                          step="1"
-                          placeholder="Power (W)"
-                          value={appliances[app.key].power || ''}
-                          onChange={(e) =>
-                            handleApplianceChange(app.key, 'power', e.target.value)
-                          }
-                          className="appliance-power-input"
-                          required
-                        />
+                        <div className="appliance-inputs">
+                          <input
+                            type="number"
+                            min="1"
+                            step="1"
+                            placeholder="Power (W)"
+                            value={appliances[app.key].power || ''}
+                            onChange={(e) =>
+                              handleApplianceChange(app.key, 'power', e.target.value)
+                            }
+                            className="appliance-power-input"
+                            required
+                          />
+                          <input
+                            type="number"
+                            min="1"
+                            step="1"
+                            placeholder="Quantity"
+                            value={appliances[app.key].quantity || 1}
+                            onChange={(e) =>
+                              handleApplianceChange(app.key, 'quantity', e.target.value)
+                            }
+                            className="appliance-quantity-input"
+                            required
+                          />
+                        </div>
                       )}
                     </div>
                   ))}

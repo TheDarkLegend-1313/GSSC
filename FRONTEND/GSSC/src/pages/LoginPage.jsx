@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext.jsx'
 
@@ -7,7 +7,7 @@ const LoginPage = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -19,13 +19,13 @@ const LoginPage = () => {
 
     try {
       // Use AuthContext login which handles JWT authentication
-      const result = await login(email, password)
+      const result = await login(username, password)
 
       if (result.success) {
         // Redirect to home page
         navigate('/')
       } else {
-        setError(result.error || 'Invalid email or password')
+        setError(result.error || 'Invalid username or password')
       }
     } catch (err) {
       setError(
@@ -33,7 +33,7 @@ const LoginPage = () => {
           err.response?.data?.message ||
           err.response?.data?.error ||
           err.message ||
-          'Invalid email or password'
+          'Invalid username or password'
       )
     } finally {
       setLoading(false)
@@ -50,7 +50,7 @@ const LoginPage = () => {
       >
         <h1>Welcome back to GSSC</h1>
         <p className="panel-subtitle">
-          Sign in using your registered email and password.
+          Sign in using your registered username and password.
         </p>
 
         {error && (
@@ -61,13 +61,13 @@ const LoginPage = () => {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-field">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Username</label>
             <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               disabled={loading}
             />
@@ -90,6 +90,14 @@ const LoginPage = () => {
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
+        <div className="auth-footer">
+        <p>
+          New user?{' '}
+          <Link to="/register" className="auth-link">
+            Create an account
+          </Link>
+        </p>
+      </div>
       </motion.div>
     </div>
   )

@@ -38,11 +38,9 @@ class Product(models.Model):
     last_scraped = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ['-updated_at']
-        indexes = [
-            models.Index(fields=['category']),
-            models.Index(fields=['company']),
-        ]
-    
+        # This solves the UnorderedObjectListWarning
+        # Using '-created_at' shows newest items first
+        ordering = ['-created_at']
+        
     def __str__(self):
-        return f"{self.company} - {self.model} ({self.get_category_display()})"
+        return f"{self.company} - {self.model} ({self.category})"

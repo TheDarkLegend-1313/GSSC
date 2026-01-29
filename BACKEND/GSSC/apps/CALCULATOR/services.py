@@ -33,19 +33,23 @@ What my Output Dictionary should look like:
 
 import math
 
-def hourly_power_consumption(
-    appliances: dict,
-) -> float:
+def hourly_power_consumption(appliances: dict) -> float:
+    if not isinstance(appliances, dict):
+        raise ValueError("appliances must be a dictionary")
+
     total_hourly_wh = 0.0
 
-    for specs in appliances.values():
-        power = specs["power_watts"]
-        quantity = specs["quantity"]
+    for name, specs in appliances.items():
+        try:
+            power = float(specs.get("power_watts", 0))
+            quantity = int(specs.get("quantity", 1))
+        except (TypeError, ValueError):
+            raise ValueError(f"Invalid specs for appliance '{name}'")
 
-        hourly_wh = power * quantity
-        total_hourly_wh += hourly_wh
+        total_hourly_wh += power * quantity
 
     return total_hourly_wh
+
 
 def max_inverter_capacity_kw(
     total_hourly_wh: float,
@@ -125,19 +129,19 @@ def power_to_panel_calculator(
         backup_hours=backup_hours,
     )
 
-    solar_panel_quantity = sum(
-        morning_load["system_requirements"]["morning_solar_panel_quantity"],
-        night_load["system_requirements"]["night_solar_panel_quantity"],
+    solar_panel_quantity = (
+        morning_load["system_requirements"]["morning_solar_panel_quantity"]+
+        night_load["system_requirements"]["night_solar_panel_quantity"]
     )
 
-    total_daily_kwh = sum(
-        morning_load["system_requirements"]["total_morning_kwh"],
-        night_load["system_requirements"]["total_night_kwh"],
+    total_daily_kwh = (
+        morning_load["system_requirements"]["total_morning_kwh"]+
+        night_load["system_requirements"]["total_night_kwh"]
     )
 
     return {
         "system_requirements": {
-            "max_inverter_capacity_kw": inverter_capacity_kw,
+            "max_inverter_capacity": inverter_capacity_kw,
             "total_daily_power_kwh": round(total_daily_kwh, 2),
             "solar_panel_quantity": solar_panel_quantity,
         }

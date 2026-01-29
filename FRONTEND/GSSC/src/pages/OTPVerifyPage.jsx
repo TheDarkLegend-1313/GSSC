@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { authAPI } from '../services/api.js'
 import { tokenService } from '../services/api.js'
@@ -36,14 +36,29 @@ const OTPVerifyPage = () => {
       const accessToken = response.access_token || response.access || response.data?.access_token
 
       if (accessToken) {
-        // Store access token
-        tokenService.setTokens(accessToken, response.refresh_token || '', email)
+        // Check the flow source
+        const forgotPasswordFlow = sessionStorage.getItem('forgot_password_flow')
+        const registrationFlow = sessionStorage.getItem('registration_flow')
 
-        // Clear session storage
+        // Clear session storage flags
         sessionStorage.removeItem('otp_email')
 
-        // Redirect to change password page
-        navigate('/change-password')
+        if (forgotPasswordFlow === 'true') {
+          // User came from forgot password flow - redirect to forget change password page
+          // Keep the forgot_password_flow flag for the next page
+          navigate('/forget-change-password')
+        } else if (registrationFlow === 'true') {
+          // User came from registration flow - redirect to login
+          sessionStorage.removeItem('registration_flow')
+          sessionStorage.removeItem('forgot_password_flow')
+          // Store access token for login
+          tokenService.setTokens(accessToken, response.refresh_token || '', email)
+          navigate('/login')
+        } else {
+          // Default: store token and redirect to change password (for logged-in users)
+          tokenService.setTokens(accessToken, response.refresh_token || '', email)
+          navigate('/change-password')
+        }
       } else {
         throw new Error('OTP verification failed')
       }
@@ -62,6 +77,15 @@ const OTPVerifyPage = () => {
 
   return (
     <div className="page auth-page">
+      <Link to="/" className="auth-brand">
+        <span className="brand-mark">✹</span>
+        <div className="brand-text">
+          <span className="brand-name">GSSC</span>
+          <span className="brand-tagline">
+            Guidance System for Solar Consumers
+          </span>
+        </div>
+      </Link>
       <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 24 }}

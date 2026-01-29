@@ -21,9 +21,9 @@ from APPS.PRICE_TRACKER import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('APPS.AUTHENTICATION.urls')),
-    path('ai-chatbot/', include('APPS.AI_CHATBOT.urls')),
+    path("chatbot/", include("APPS.AI_CHATBOT.urls")),
     path('calculator/', include('APPS.CALCULATOR.urls')),
-    path('contacts/', include('APPS.CONTACTS.urls')),
+    path('contact/', include('APPS.CONTACTS.urls')),
     path('price-tracker/', views.PriceTrackerListView.as_view(), name="price_tracker"),
     path('quotation/', include('APPS.QUOTATION_GENERATOR.urls')),
 ]

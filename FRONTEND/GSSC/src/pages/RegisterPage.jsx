@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { authAPI } from '../services/api.js'
@@ -20,11 +20,15 @@ const RegisterPage = () => {
       // Register user
       const response = await authAPI.register(username, email, password)
 
-      // If registration is successful, redirect to OTP request page
+      // If registration is successful, backend sends OTP, so redirect to OTP verify page
       if (response.message || response.success || response.detail) {
         // Store email in sessionStorage for OTP flow
         sessionStorage.setItem('otp_email', email)
-        navigate('/request-otp')
+        // Mark this as registration flow (not forgot password)
+        sessionStorage.setItem('registration_flow', 'true')
+        // Clear any forgot password flow flag
+        sessionStorage.removeItem('forgot_password_flow')
+        navigate('/verify-otp')
       } else {
         throw new Error('Registration failed')
       }
@@ -51,6 +55,15 @@ const RegisterPage = () => {
 
   return (
     <div className="page auth-page">
+      <Link to="/" className="auth-brand">
+        <span className="brand-mark">✹</span>
+        <div className="brand-text">
+          <span className="brand-name">GSSC</span>
+          <span className="brand-tagline">
+            Guidance System for Solar Consumers
+          </span>
+        </div>
+      </Link>
       <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 24 }}

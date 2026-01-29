@@ -74,7 +74,7 @@ class QuotationOptionsView(APIView):
         for item in fixed_items:
             data[item] = {
                 "descriptions": ["Standard"],
-                "unitPrices": {"Standard": 0},
+                "unitPrices": {"Standard": 1999},
             }
 
         return Response(data, status=status.HTTP_200_OK)

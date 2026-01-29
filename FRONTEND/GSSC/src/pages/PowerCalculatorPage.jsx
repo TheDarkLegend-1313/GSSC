@@ -147,19 +147,19 @@ const PowerCalculatorPage = () => {
           {results ? (
             <div className="summary-grid">
               <div className="summary-item">
-                <span className="label">Usable Power (kWh)</span>
+                <span className="label">Usable Power (kWh) = </span>
                 <strong>{results.usable_power_kwh || 'N/A'}</strong>
               </div>
               <div className="summary-item">
-                <span className="label">Total Daily (kWh)</span>
-                <strong>{results.total_daily_kwh || 'N/A'}</strong>
+                <span className="label">Total Daily (kWh) = </span>
+                <strong>{results.total_daily_power_kwh || 'N/A'}</strong>
               </div>
               <div className="summary-item">
-                <span className="label">Inverter Capacity (kWh)</span>
-                <strong>{results.invertor_capacity_kwh || 'N/A'}</strong>
+                <span className="label">Inverter Capacity (kWh) = </span>
+                <strong>{results.inverter_capacity_kwh || 'N/A'}</strong>
               </div>
               <div className="summary-item">
-                <span className="label">Battery Capacity (kWh)</span>
+                <span className="label">Battery Capacity (kWh) = </span>
                 <strong>{results.battery_capacity_kwh || 'N/A'}</strong>
               </div>
             </div>

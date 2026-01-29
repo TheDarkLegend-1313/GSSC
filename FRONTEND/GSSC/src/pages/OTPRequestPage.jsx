@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { authAPI } from '../services/api.js'
 
@@ -23,6 +23,8 @@ const OTPRequestPage = () => {
       if (response.message || response.success || response.detail) {
         // Store email in sessionStorage to use in verify page
         sessionStorage.setItem('otp_email', email)
+        // Mark this as forgot password flow (not registration)
+        sessionStorage.setItem('forgot_password_flow', 'true')
         navigate('/verify-otp')
       } else {
         throw new Error('Failed to send OTP')
@@ -42,6 +44,15 @@ const OTPRequestPage = () => {
 
   return (
     <div className="page auth-page">
+      <Link to="/" className="auth-brand">
+        <span className="brand-mark">✹</span>
+        <div className="brand-text">
+          <span className="brand-name">GSSC</span>
+          <span className="brand-tagline">
+            Guidance System for Solar Consumers
+          </span>
+        </div>
+      </Link>
       <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 24 }}

@@ -42,6 +42,15 @@ const LoginPage = () => {
 
   return (
     <div className="page auth-page">
+      <Link to="/" className="auth-brand">
+        <span className="brand-mark">✹</span>
+        <div className="brand-text">
+          <span className="brand-name">GSSC</span>
+          <span className="brand-tagline">
+            Guidance System for Solar Consumers
+          </span>
+        </div>
+      </Link>
       <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 24 }}
@@ -84,6 +93,16 @@ const LoginPage = () => {
               required
               disabled={loading}
             />
+          </div>
+
+          <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
+            <Link
+              to="/request-otp"
+              className="auth-link"
+              style={{ fontSize: '0.875rem' }}
+            >
+              Forgot password?
+            </Link>
           </div>
 
           <button type="submit" className="btn-primary" disabled={loading}>

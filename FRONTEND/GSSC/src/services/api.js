@@ -164,6 +164,15 @@ export const authAPI = {
     })
     return response.data
   },
+
+  // Reset password (for forgot password flow using OTP token)
+  resetPassword: async (newPassword, confirmPassword) => {
+    const response = await api.post('/auth/reset-password/', {
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    })
+    return response.data
+  },
 }
 
 // Calculator API endpoints

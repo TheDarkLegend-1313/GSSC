@@ -27,6 +27,19 @@ const PriceTrackerPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, currentPage])
 
+  // Scroll table into view when data loads
+  useEffect(() => {
+    if (data.length > 0 && !loading) {
+      const tableWrapper = document.querySelector('.price-table-wrapper')
+      if (tableWrapper) {
+        // Small delay to ensure DOM is updated
+        setTimeout(() => {
+          tableWrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+        }, 100)
+      }
+    }
+  }, [data, loading])
+
   const fetchData = async () => {
     setLoading(true)
     setError(null)
@@ -88,6 +101,13 @@ const PriceTrackerPage = () => {
 
   const headers = data.length > 0 ? getTableHeaders() : []
 
+  // Set CSS variable for column count
+  useEffect(() => {
+    if (headers.length > 0) {
+      document.documentElement.style.setProperty('--col-count', headers.length.toString())
+    }
+  }, [headers.length])
+
   return (
     <div className="page page-with-hero">
       <section className="page-hero">
@@ -100,9 +120,9 @@ const PriceTrackerPage = () => {
         </div>
       </section>
 
-      <section className="page-content-grid single-column">
+      <section className="page-content-grid single-column price-tracker-grid">
         <motion.div
-          className="panel panel-primary"
+          className="panel panel-primary price-tracker-panel"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}

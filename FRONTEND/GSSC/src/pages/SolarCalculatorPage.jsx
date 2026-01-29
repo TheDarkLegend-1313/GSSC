@@ -17,7 +17,7 @@ const PANEL_WATTS = [550, 650, 750]
 const SolarCalculatorPage = () => {
   const [appliances, setAppliances] = useState(
     APPLIANCES.reduce((acc, app) => {
-      acc[app.key] = { enabled: false, power: 0, quantity: 1 }
+      acc[app.key] = { enabled: false, power_watts: 0, quantity: 1 }
       return acc
     }, {})
   )
@@ -58,7 +58,7 @@ const SolarCalculatorPage = () => {
     const appliancesJson = Object.keys(appliances).reduce((acc, key) => {
       if (appliances[key].enabled) {
         acc[key] = {
-          power: appliances[key].power,
+          power_watts: appliances[key].power_watts,
           quantity: appliances[key].quantity,
         }
       }
@@ -150,9 +150,9 @@ const SolarCalculatorPage = () => {
                             min="1"
                             step="1"
                             placeholder="Power (W)"
-                            value={appliances[app.key].power || ''}
+                            value={appliances[app.key].power_watts || ''}
                             onChange={(e) =>
-                              handleApplianceChange(app.key, 'power', e.target.value)
+                              handleApplianceChange(app.key, 'power_watts', e.target.value)
                             }
                             className="appliance-power-input"
                             required
@@ -235,15 +235,15 @@ const SolarCalculatorPage = () => {
             <div className="result-grid">
               <div className="result-card">
                 <span className="label">Max Inverter Capacity</span>
-                <strong>{results.Max_inverter_capacity || 'N/A'}</strong>
+                <strong>{results.max_inverter_capacity || 'N/A'}</strong>
               </div>
               <div className="result-card">
                 <span className="label">Total Daily kWh</span>
-                <strong>{results.total_daily_kwh || 'N/A'}</strong>
+                <strong>{results.total_daily_power_kwh || 'N/A'}</strong>
               </div>
               <div className="result-card">
                 <span className="label">Solar Panel Quantity</span>
-                <strong>{results.Solar_panel_Quantity || 'N/A'}</strong>
+                <strong>{results.solar_panel_quantity || 'N/A'}</strong>
               </div>
             </div>
           ) : (

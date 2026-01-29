@@ -12,6 +12,7 @@ import RegisterPage from './pages/RegisterPage.jsx'
 import OTPRequestPage from './pages/OTPRequestPage.jsx'
 import OTPVerifyPage from './pages/OTPVerifyPage.jsx'
 import ChangePasswordPage from './pages/ChangePasswordPage.jsx'
+import ForgetChangePasswordPage from './pages/ForgetChangePasswordPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import './App.css'
 
@@ -89,6 +90,7 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/request-otp" element={<OTPRequestPage />} />
       <Route path="/verify-otp" element={<OTPVerifyPage />} />
+      <Route path="/forget-change-password" element={<ForgetChangePasswordPage />} />
 
       {/* Fallback */}
       <Route

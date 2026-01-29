@@ -128,3 +128,5 @@ def power_calculator_view(request):
             {"error": "Internal server error", "details": str(e)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+#END
